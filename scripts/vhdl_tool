@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+import argparse
+import functools
+import itertools
+import os
+from glob import glob
+from typing import List
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='VHDL Utilities with GHDL')
+    subparsers = parser.add_subparsers(help='commands')
+
+    build_parser = subparsers.add_parser('sim', help='analyzes vhd files and simulates a given testbench.')
+    build_parser.add_argument('testbench', type=str, help='testbench name (as decared in tb architecture)')
+    build_parser.add_argument('files', nargs='+', help='directories with relevant vhd sources')
+    build_parser.add_argument('--stop-time', type=int, default=int(1e4), help='simulation time in [ns]')
+    
+    return parser.parse_args()
+
+def find_vhd_files(path: str) -> List[str]:
+    return [y for x in os.walk(path) for y in glob(os.path.join(x[0], '*.vhd'))]
+
+def ghdl_sim_cmd_gen(vhd_tb_name:str, vhd_paths: List[str], stop_time_nanos: int) -> str:
+    vcd_tb_path = vhd_tb_name + '.vcd'
+    cmds = ''
+    srcs = ' '.join(vhd_paths)
+    cmds += f'ghdl -a {srcs} && '
+    cmds += f'ghdl -s {srcs} && '
+    cmds += f'ghdl -e {vhd_tb_name} && '
+    cmds += f'ghdl -r {vhd_tb_name} '\
+              f'--vcd={vcd_tb_path} --stop-time={stop_time_nanos}ns &&'
+    cmds += f'mv *.cf *.vcd ./build/'
+    return cmds
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    vhd_files_nested = [find_vhd_files(folder) for folder in args.files]
+    vhd_files = itertools.chain(*vhd_files_nested) 
+    cmd = ghdl_sim_cmd_gen(args.testbench, vhd_files, args.stop_time)
+    print(cmd)
+    os.system(cmd)
