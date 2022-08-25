@@ -1,5 +1,4 @@
 # VHDL-Workspace
-ll using their host working directory.
 
 ## Setup Instructions
 - Install Docker.
