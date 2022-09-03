@@ -19,7 +19,7 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
-root@lorsi-ThinkPad-T490:/workspace# vhdl_tool sim --help
+root@lorsi96:/workspace# vhdl_tool sim --help
 usage: vhdl_tool sim [-h] [--stop-time STOP_TIME] testbench files [files ...]
 
 positional arguments:
