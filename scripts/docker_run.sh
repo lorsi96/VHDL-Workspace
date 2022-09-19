@@ -1,8 +1,10 @@
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd ) 
+
 docker run \
     -it --rm \
     --privileged \
     -v $(pwd):/workspace \
-    -v $(pwd)/scripts:/scripts \
+    -v $SCRIPT_DIR/../scripts:/scripts \
     -v /dev:/dev \
     --network host \
     lorsi/vhdl-workspace /bin/bash
