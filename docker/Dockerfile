@@ -8,7 +8,7 @@ RUN { echo 'tzdata tzdata/Areas select Etc'; echo 'tzdata tzdata/Zones/Etc selec
 RUN apt-get update -y && apt-get install -y ghdl gtkwave python3 python3-pip
 
 # Python Deps
-RUN pip3 install cocotb fxpmath
+RUN pip3 install cocotb fxpmath pytest
 
 # Add scripts path.
 RUN mkdir /scripts
